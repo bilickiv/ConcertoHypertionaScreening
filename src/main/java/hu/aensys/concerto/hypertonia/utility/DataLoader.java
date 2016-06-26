@@ -37,6 +37,7 @@ public class DataLoader {
 	IGenericClient client;
 	List<MeasurementModel> measurements;
 	Date currentDate;
+	String patientName;
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 
@@ -166,6 +167,7 @@ public class DataLoader {
     
             } else if (entry.getResource() instanceof  Patient) {
                 Patient patient = (Patient) entry.getResource();
+                patientName = patient.getNameFirstRep().getFamilyFirstRep() + ", " + patient.getNameFirstRep().getGivenFirstRep();
                 //System.out.println("Patient: name = " + patient.getNameFirstRep().getFamilyFirstRep() + ", " + patient.getNameFirstRep().getGivenFirstRep());
             }else
     	  	{
@@ -180,6 +182,10 @@ public class DataLoader {
 		retrieveData();
 		Collections.sort(measurements);
 		return measurements;
+	}
+	public String getName()
+	{
+		return patientName;
 	}
 
 }

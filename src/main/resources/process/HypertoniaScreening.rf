@@ -24,6 +24,10 @@
 DataLoader dl = new DataLoader();
 List&lt;MeasurementModel&gt; measurements = dl.getMeasurements();
 kcontext.setVariable("measurements", measurements);
+UserModel um = (UserModel)kcontext.getVariable("user");
+um.setName(dl.getName());
+kcontext.setVariable("user",um);
+
 System.out.println("Finished the loading");</action>
     </actionNode>
     <actionNode id="8" name="Evaluate the risk and generate alerts" x="404" y="62" width="258" height="48" >
