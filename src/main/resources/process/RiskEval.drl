@@ -1,0 +1,22 @@
+//created on: 2016.06.25.
+package com.sample
+import hu.aensys.concerto.hypertonia.IllnessModel;
+import hu.aensys.concerto.hypertonia.UserModel;
+//list any import classes here.
+
+
+
+//declare any global variables here
+
+
+rule "Risk evaluation"
+	
+	no-loop true
+	ruleflow-group "Risk"
+	when
+		i:IllnessModel( type == "Hypertiona suspected based on three consecutive week average")
+		u:UserModel()
+	then
+		u.addIllness(i);
+		System.out.println("Illness detected based on screening for user:" + u.getName());		
+end

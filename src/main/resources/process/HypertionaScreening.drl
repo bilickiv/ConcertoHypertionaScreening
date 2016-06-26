@@ -1,0 +1,51 @@
+//created on: 2016.06.25.
+package com.sample
+import hu.aensys.concerto.hypertonia.MeasurementModel;
+import hu.aensys.concerto.hypertonia.IllnessModel;
+import hu.aensys.concerto.hypertonia.utility.Counter;
+
+
+
+
+rule "Hypertiona suspected"
+		ruleflow-group "Hypertonia"
+	when
+		Counter(value ==  3)
+	then
+		IllnessModel i = new IllnessModel();
+		i.setType("Hypertiona suspected based on three consecutive week average");
+		insert(i);
+		//m.setValue(2);update(m);
+		System.out.println("Hypertiona detected" );
+end
+
+rule "Init Counter"
+salience 1
+no-loop
+	ruleflow-group "Hypertonia"
+when
+	not Counter( name == "Estimate for three weeks" )
+then
+	Counter c = new Counter("Estimate for three weeks", 1);
+	insert(c);
+	System.out.println("RHS Init Counter:" + c);
+end
+ 
+rule "Estimate for three weeks"
+agenda-group "USERSPACE"
+no-loop
+	ruleflow-group "Hypertonia"
+
+when
+	accumulate( $token : MeasurementModel(value >  92, type == "Systolic") ;
+ 				$val : count($token)
+ 			   )
+ 	$cv1 : Counter( name == "Estimate for three weeks", value != $val.doubleValue() )
+then
+	int count = $val.intValue()+1;
+	$cv1.setValue(count);
+	update($cv1);
+	System.out.println("The results: "+$cv1);
+end
+
+
